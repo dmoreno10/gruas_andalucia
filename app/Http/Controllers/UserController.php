@@ -43,12 +43,12 @@ class UserController extends Controller
         $usuario->name = $request->name;
         $usuario->email = $request->email;
         $usuario->password =FacadesHash::make($request['password']);
-        $usuario->save();
+        $usuario->save() ;
         return redirect()->route('users.index');
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified resources.
      */
     public function show(string $id)
     {
