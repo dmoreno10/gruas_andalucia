@@ -47,4 +47,4 @@
         });
     });
 </script>
-@stack('scripts')
+ @stack('scripts')

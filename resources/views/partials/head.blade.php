@@ -29,7 +29,7 @@
           urls: ["dist/css/fonts.min.css"],
         },
         active: function () {
-          sessionStorage.fonts = true;
+           sessionStorage.fonts = true;
         },
       });
     </script>
