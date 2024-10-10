@@ -14,6 +14,7 @@
     'resources/dist/js/kaiadmin.min.js', // Kai Admin
     'resources/dist/js/setting-demo.js', // Setting Demo
     'resources/dist/js/demo.js', // Demo
+    'resources/vue/app.js'
 ])
 
 <script>
@@ -46,4 +47,4 @@
         });
     });
 </script>
-
+@stack('scripts')
