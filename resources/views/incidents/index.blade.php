@@ -1,4 +1,4 @@
-@extends('layouts.app')
+{{-- @extends('layouts.app')
 
 @section('content')
    <h1>Listado de incidencias</h1>
@@ -30,4 +30,4 @@
     {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
 @endpush
 
-
+ --}}
