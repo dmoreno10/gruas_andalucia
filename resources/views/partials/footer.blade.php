@@ -1,50 +1,69 @@
-@vite([
-    'resources/dist/js/core/jquery-3.7.1.min.js', // jQuery (debe ser primero)
-    'resources/dist/js/plugin/jquery.sparkline/jquery.sparkline.min.js', // Plugin Sparkline (debe ser después de jQuery)
-    'resources/dist/js/core/popper.min.js', // Popper
-    'resources/dist/js/core/bootstrap.min.js', // Bootstrap
-    'resources/dist/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js', // jQuery Scrollbar
-    'resources/dist/js/plugin/chart.js/chart.min.js', // Chart.js
-    'resources/dist/js/plugin/chart-circle/circles.min.js', // Chart Circle
-    'resources/dist/js/plugin/datatables/datatables.min.js', // DataTables
-    'resources/dist/js/plugin/bootstrap-notify/bootstrap-notify.min.js', // Bootstrap Notify
-    'resources/dist/js/plugin/jsvectormap/jsvectormap.min.js', // JS Vector Map
-    'resources/dist/js/plugin/jsvectormap/world.js', // World Map
-    'resources/dist/js/plugin/sweetalert/sweetalert.min.js', // SweetAlert
-    'resources/dist/js/kaiadmin.min.js', // Kai Admin
-    'resources/dist/js/setting-demo.js', // Setting Demo
-    'resources/dist/js/demo.js', // Demo
-    'resources/vue/app.js'
-])
-
+<!--   Core JS Files   -->
+<script src="{{ url('/dist/js/core/jquery-3.7.1.min.js') }}"></script>
+<script src="{{ url('/dist/js/core/popper.min.js') }}"></script>
+<script src="{{ url('/dist/js/core/bootstrap.min.js') }}"></script>
 <script>
     $(document).ready(function() {
-        $("#lineChart").sparkline([102, 109, 120, 99, 110, 105, 115], {
-            type: "line",
-            height: "70",
-            width: "100%",
-            lineWidth: "2",
-            lineColor: "#177dff",
-            fillColor: "rgba(23, 125, 255, 0.14)",
-        });
+        // Handle delete button click
+        $('.btn-delete').on('click', function() {
+            var form = $(this).closest('form'); // Get the form associated with the delete button
+            var userId = $(this).data('id'); // Get user ID from data attribute
+            console.log('ok');
 
-        $("#lineChart2").sparkline([99, 125, 122, 105, 110, 124, 115], {
-            type: "line",
-            height: "70",
-            width: "100%",
-            lineWidth: "2",
-            lineColor: "#f3545d",
-            fillColor: "rgba(243, 84, 93, .14)",
-        });
-
-        $("#lineChart3").sparkline([105, 103, 123, 100, 95, 105, 115], {
-            type: "line",
-            height: "70",
-            width: "100%",
-            lineWidth: "2",
-            lineColor: "#ffa534",
-            fillColor: "rgba(255, 165, 52, .14)",
+            // Display the SweetAlert confirmation dialog
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: '¡No podrás recuperar esto!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, borrar!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); // Submit the form if confirmed
+                }
+            });
         });
     });
 </script>
- @stack('scripts')
+
+<!-- jQuery Scrollbar -->
+<script src="{{ url('/dist/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js') }}"></script>
+
+<!-- Chart JS -->
+<script src="{{ url('/dist/js/plugin/chart.js/chart.min.js') }}"></script>
+
+<!-- jQuery Sparkline -->
+<script src="{{ url('/dist/js/plugin/jquery.sparkline/jquery.sparkline.min.js') }}"></script>
+
+<!-- Chart Circle -->
+<script src="{{ url('/dist/js/plugin/chart-circle/circles.min.js') }}"></script>
+
+<!-- Datatables -->
+<script src="{{ url('/dist/js/plugin/datatables/datatables.min.js') }}"></script>
+
+<!-- Bootstrap Notify -->
+<script src="{{ url('/dist/js/plugin/bootstrap-notify/bootstrap-notify.min.js') }}"></script>
+
+<!-- jQuery Vector Maps -->
+<script src="{{ url('/dist/js/plugin/jsvectormap/jsvectormap.min.js') }}"></script>
+<script src="{{ url('/dist/js/plugin/jsvectormap/world.js') }}"></script>
+
+<!-- Sweet Alert -->
+<script src="{{ url('/dist/js/plugin/sweetalert/sweetalert.min.js') }}"></script>
+
+<!-- Kaiadmin JS -->
+<script src="{{ url('/dist/js/kaiadmin.min.js') }}"></script>
+
+<!-- Kaiadmin DEMO methods, don't include it in your project! -->
+<script src="{{ url('/dist/js/setting-demo.js') }}"></script>
+
+<script src="{{ url('/dist/js/demo.js') }}"></script>
+
+@vite([
+    'resources\vue\app.js'
+])
+
+@stack('scripts')

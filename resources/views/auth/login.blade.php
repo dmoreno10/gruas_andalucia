@@ -70,6 +70,10 @@
                                         {{ __('Forgot Your Password?') }}
                                     </a>
                                 @endif --}}
+                                 {{-- Botón de "Regístrate" añadido --}}
+                                 <a  href="{{ route('users.create') }}" class="btn btn-link">
+                                    {{ __('Registrate') }}
+                                </a>
                             </div>
                         </div>
                     </form>

@@ -8,7 +8,7 @@
         <div class="row card card-outline ">
             <div class="card-header">
                 <div class="card-tools">
-                    <a href="{{url('/users/create')}}" class="btn btn-primary">
+                    <a href="{{route('users.create')}}" class="btn btn-primary">
                         Crear Usuario
                         <i class="fa fa-plus"></i>
                     </a>
@@ -17,12 +17,15 @@
 
             <div class="container">
                 <div class="card">
-                    <div class="card-header">Manage Users</div>
+                    <div class="card-header">Manejo de usuarios</div>
                     <div class="card-body">
                         {{ $dataTable->table() }}
                     </div>
                 </div>
             </div>
+
+            <user-crud></user-crud>
+
         </div>
     </div>
 @endsection

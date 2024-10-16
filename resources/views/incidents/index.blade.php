@@ -1,14 +1,14 @@
-{{-- @extends('layouts.app')
+@extends('layouts.app')
 
 @section('content')
    <h1>Listado de incidencias</h1>
    <div class="col-md-12">
-    Incidencias registradss
+    Incidencias registradas
     <hr>
         <div class="row card card-outline ">
             <div class="card-header">
                 <div class="card-tools">
-                    <a href="{{url('/users/create')}}" class="btn btn-primary">
+                    <a href="{{route('incidents.create')}}" class="btn btn-primary">
                         Crear Incidencia
                         <i class="fa fa-plus"></i>
                     </a>
@@ -23,6 +23,7 @@
                     </div>
                 </div>
             </div>
+            <incident-crud></incident-crud>
         </div>
     </div>
 @endsection
@@ -30,4 +31,4 @@
     {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
 @endpush
 
- --}}
+

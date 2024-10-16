@@ -6,7 +6,11 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
+    <link
+    rel="icon"
+    href="{{ Vite::asset('resources/dist/img/logic-sistemas.png') }}"
+    type="image/x-icon"
+  />
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
