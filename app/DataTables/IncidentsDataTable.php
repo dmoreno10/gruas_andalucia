@@ -57,8 +57,8 @@ class IncidentsDataTable extends DataTable
             ->columns([
                 // Otras columnas...
                 Column::make('title')->title('Título'),
-                Column::make('status')->title('Estado'),
-                Column::make('status_icon')->title('Icono')->orderable(false)->searchable(false), // Añadir esta línea
+                Column::make('status')->title('Estado de incidencia'),
+                Column::make('status_icon')->title('Estado')->orderable(false)->searchable(false), // Añadir esta línea
                 Column::make('created_at')->title('Fecha de Creación'),
                 Column::computed('action')->title('Acciones')
                 ->exportable(false)

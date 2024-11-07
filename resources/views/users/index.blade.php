@@ -1,36 +1,27 @@
 @extends('layouts.app')
 
 @section('content')
-   <h1>Listado de usuarios</h1>
-   <div class="col-md-12">
-    Usuarios registrados
-    <hr>
-        <div class="row card card-outline ">
-            <div class="card-header">
-                <div class="card-tools">
-                    <a href="{{route('users.create')}}" class="btn btn-primary">
-                        Crear Usuario
-                        <i class="fa fa-plus"></i>
-                    </a>
-                </div>
+<div class="container mt-5">
+
+    <h1 class="mb-4 text-center">{{__('messages.user_list')}}</h1>
+
+    <div id="app" class="card shadow">
+        <div class="card-header">
+            <h5 class="mb-0">Usuarios Registrados</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                {{ $dataTable->table(['class' => 'table table-striped table-bordered', 'id' => 'users-table']) }}
             </div>
-
-            <div class="container">
-                <div class="card">
-                    <div class="card-header">Manejo de usuarios</div>
-                    <div class="card-body">
-                        {{ $dataTable->table() }}
-                    </div>
-                </div>
-            </div>
-
-            <user-crud></user-crud>
-
         </div>
     </div>
+</div>
+
+<user-crud></user-crud>
 @endsection
+
 @push('scripts')
     {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
+
+
 @endpush
-
-

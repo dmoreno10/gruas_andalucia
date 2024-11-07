@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\DocumentalGestionDataTable;
+use App\DataTables\FileDataTable;
 use App\Models\DocumentalGestion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +15,7 @@ class DocumentalGestionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(DocumentalGestionDataTable $dataTable)
+    public function index(FileDataTable $dataTable)
     {
         return $dataTable->render('documents.index');
     }
@@ -51,7 +52,7 @@ class DocumentalGestionController extends Controller
 
             // Guardar el archivo en el sistema
             $file = $request->file('document');
-            $filePath = $file->store('documents');  // Esto guardará el archivo en la carpeta 'documents'
+            $filePath = $file->store('documents','public');  // Esto guardará el archivo en la carpeta 'documents'
 
             // Crear el registro en la base de datos
             $document = new DocumentalGestion();
@@ -64,44 +65,24 @@ class DocumentalGestionController extends Controller
             $document->user_id = $userId;  // Asignar el ID del usuario autenticado
             $document->save();
 
-            return redirect()->route('documents.index')->with('success', 'Documento guardado exitosamente');
+            return redirect()->route('documents-gest.index')->with('success', 'Documento guardado exitosamente');
         }
 
-
-
-
-
-
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        //
+        DocumentalGestion::destroy($id);
+        return redirect()->route('documents-gest.index');
+    }
+    public function show($id)
+    {
+    // Buscar el documento por ID
+    $document = DocumentalGestion::findOrFail($id);
+
+    // Devolver la vista con el documento (puedes personalizar la vista)
+    return view('documents.show', compact('document'));
     }
 }

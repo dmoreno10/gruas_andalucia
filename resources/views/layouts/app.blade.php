@@ -11,9 +11,12 @@
                 <div class="logo-header" data-background-color="dark">
                     <a href="{{ url('/') }}" class="logo">
                         <!-- Forma de poner la ruta de img -->
-                        <img src="{{ Vite::asset('resources/dist/img/logic-sistemas.png') }}" alt="navbar brand"
-                            class="navbar-brand" height="110" />
-
+                        @if ($configuration && $configuration->file)
+                            <img src="{{ asset('storage/' . $configuration->logo) }}" width="100" alt="Logo">
+                        @else
+                            <img src="{{ Vite::asset('resources/dist/img/jm_denis.jpg') }}" alt="Logo predeterminado"
+                                class="logo-img" />
+                        @endif
                     </a>
                     <div class="nav-toggle">
                         <button class="btn btn-toggle toggle-sidebar">
@@ -32,49 +35,87 @@
             <div class="sidebar-wrapper scrollbar scrollbar-inner">
                 <div class="sidebar-content">
                     <ul class="nav nav-secondary">
+                        <li class="nav-item ">
+                            <a href="{{ route('time-entries.index') }}">
+                                <i class="fas fa-clock"></i>
+                                <p>{{ __('messages.time_control') }}</p>
+                            </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a href="{{ route('employees.index') }}">
+                                <i class="fas fa-users"></i>
+                                <p>{{ __('messages.employees') }}</p>
+                            </a>
+                        </li>
+                        <li class="nav-item ">
 
+                            <a href="{{ route('locations.index') }}">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <p>{{ __('messages.location') }}</p>
+                            </a>
+                        </li>
                         <li class="nav-section">
                             <span class="sidebar-mini-icon">
                                 <i class="fa fa-ellipsis-h"></i>
                             </span>
-                            <h4 class="text-section">Herramientas</h4>
+                            <h4 class="text-section">{{ __('messages.tools') }}</h4>
                         </li>
                         <li class="nav-item ">
-                            <a href="#">
+                            <a href="{{ route('events.index') }}">
                                 <i class="fas fa-calendar"></i>
-                                <p>Calendario</p>
+                                <p>{{ __('messages.calendar') }}</p>
                             </a>
                         </li>
-
+                        <li class="nav-item">
+                            <a href="{{ route('rates.index') }}">
+                                <i class="fas fa-file-invoice"></i>
+                                <p>{{ __('messages.cars_invoices') }}</p>
+                            </a>
+                        </li>
                         <li class="nav-item ">
                             <a href="{{ route('incidents.index') }}">
                                 <i class="fas fa-exclamation-triangle"></i>
-                                <p>Incidencias</p>
+                                <p>{{ __('messages.incidences') }}</p>
                             </a>
                         </li>
+                        <ul class="nav">
+                            <li class="nav-item">
+                                <a href="{{ route('tasks.index') }}">
+                                    <i class="fas fa-tasks"></i> <!-- Icono de tareas -->
+                                    <p>{{ __('messages.tasks') }}</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('rankings.index') }}">
+                                    <i class="fas fa-trophy"></i> <!-- Icono de ranking -->
+                                    <p>{{ __('messages.game') }}</p>
+                                </a>
+                            </li>
+                        </ul>
+
                         <li class="nav-item ">
-                            <a href="{{ route('documents.index') }}">
+                            <a href="{{ route('documents-gest.index') }}">
                                 <i class="fas fa-folder"></i>
-                                <p>Ges.Documental</p>
+                                <p>{{ __('messages.documental_gestion') }}</p>
                             </a>
                         </li>
                         <li class="nav-item ">
                             <a href="{{ route('configuration.index') }}">
                                 <i class="fas fa-cog"></i>
-                                <p>Configuracion</p>
+                                <p>{{ __('messages.configuration') }}</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
                             <a href="{{ route('users.index') }}">
                                 <i class="fas fa-user"></i>
-                                <p>Usuarios</p>
+                                <p>{{ __('messages.users') }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('accesslogs.index') }}">
                                 <i class="fas fa-list"></i>
-                                <p>Log de accesos</p>
+                                <p>{{ __('messages.access_logs') }}</p>
                             </a>
                         </li>
 
@@ -134,7 +175,10 @@
                                 <input type="text" placeholder="Search ..." class="form-control" />
                             </div>
                         </nav>
-
+                        <div class="language-switcher m-3">
+                            <a href="{{ url('lang/en') }}" class="btn btn-primary">English</a>
+                            <a href="{{ url('lang/es') }}" class="btn btn-secondary">Español</a>
+                        </div>
                         <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
                             <li class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none">
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
@@ -301,7 +345,7 @@
                                     <div class="quick-actions-scroll scrollbar-outer">
                                         <div class="quick-actions-items">
                                             <div class="row m-0">
-                                                <a class="col-6 col-md-4 p-0" href="#">
+                                                <a class="col-6 col-md-4 p-0" href="{{ route('events.index') }}">
                                                     <div class="quick-actions-item">
                                                         <div class="avatar-item bg-danger rounded-circle">
                                                             <i class="far fa-calendar-alt"></i>
@@ -309,7 +353,7 @@
                                                         <span class="text">Calendar</span>
                                                     </div>
                                                 </a>
-                                                <a class="col-6 col-md-4 p-0" href="#">
+                                                <a class="col-6 col-md-4 p-0" href="{{ route('locations.index') }}">
                                                     <div class="quick-actions-item">
                                                         <div class="avatar-item bg-warning rounded-circle">
                                                             <i class="fas fa-map"></i>
@@ -317,7 +361,7 @@
                                                         <span class="text">Maps</span>
                                                     </div>
                                                 </a>
-                                                <a class="col-6 col-md-4 p-0" href="#">
+                                                <a class="col-6 col-md-4 p-0" href="{{ route('incidents.index') }}">
                                                     <div class="quick-actions-item">
                                                         <div class="avatar-item bg-info rounded-circle">
                                                             <i class="fas fa-file-excel"></i>
@@ -354,18 +398,27 @@
                                     </div>
                                 </div>
                             </li>
+                            <header-user></header-user>
+                            {{-- Llamamos el componente de vue  --}}
 
                             <li class="nav-item topbar-user dropdown hidden-caret">
                                 <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#"
                                     aria-expanded="false">
                                     <div class="avatar-sm">
-                                        <img src="{{ asset('storage/' . $configuration->user_image) }}?{{ now()->timestamp }}"
-                                            alt="User Image" class="avatar-img rounded-circle" />
-
+                                        @if (Auth::check() && $user->profile_image)
+                                            <!-- Si el usuario tiene una imagen de perfil -->
+                                            <img src="{{ asset('storage/' . $user->profile_image) }}"
+                                                class="avatar-img rounded-circle" alt="User Image">
+                                        @else
+                                            <!-- Si no tiene imagen de perfil, mostramos una imagen predeterminada -->
+                                            <img src="{{ Vite::asset('resources/dist/img/jm_denis.jpg') }}"
+                                                alt="Imagen predeterminada" class="avatar-img rounded-circle" />
+                                        @endif
                                     </div>
                                     <span class="profile-username">
-                                        <span class="op-7">Hi,</span>
-                                        <span class="fw-bold">{{ Auth::user()->name }}</span>
+                                        <span class="op-7">{{ __('messages.hello') }}</span>
+                                        <span id="user" data-user="{{ Auth::user() }}"
+                                            class="user_profile_name fw-bold">{{ Auth::user() ? Auth::user()->name : 'invitado' }}</span>
                                     </span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-user animated fadeIn">
@@ -373,26 +426,44 @@
                                         <li>
                                             <div class="user-box">
                                                 <div class="avatar-lg">
-                                                    <img src="{{ Vite::asset('resources/dist/img/profile.jpg') }}"
-                                                        alt="image profile" class="avatar-img rounded" />
+                                                    @if (Auth::check() && $user->profile_image)
+                                                        <a href="{{ route('users.profile') }}">
+                                                            <img src="{{ asset('storage/' . $user->profile_image) }}"
+                                                                class="avatar-img rounded-circle" alt="User Image">
+                                                        </a>
+                                                    @else
+                                                        <img src="{{ Vite::asset('resources/dist/img/jm_denis.jpg') }}"
+                                                            alt="Imagen predeterminada"
+                                                            class="avatar-img rounded-circle" />
+                                                    @endif
                                                 </div>
                                                 <div class="u-text">
-                                                    <h4>Hizrian</h4>
-                                                    <p class="text-muted">hello@example.com</p>
-                                                    <a href="profile.html"
+                                                    <h4 id="user" class="user_profile_name">
+                                                        {{ Auth::user() ? Auth::user()->name : 'invitado' }}</h4>
+                                                    <p id="user" class="user_email" class="text-muted">
+                                                        {{ Auth::user() ? Auth::user()->email : '' }}</p>
+                                                    <a href="{{ route('users.profile') }}"
                                                         class="btn btn-xs btn-secondary btn-sm">View Profile</a>
                                                 </div>
                                             </div>
                                         </li>
                                         <li>
                                             <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">My Profile</a>
-                                            <a class="dropdown-item" href="#">My Balance</a>
-                                            <a class="dropdown-item" href="#">Inbox</a>
+                                            <a class="dropdown-item" href="#">Perfil</a>
                                             <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Account Setting</a>
+                                            <a class="dropdown-item"
+                                                href="{{ route('configuration.index') }}">Configuración</a>
                                             <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Logout</a>
+                                            <form id="logout-form2" action="{{ route('logout') }}" method="POST"
+                                                style="display: none;">
+                                                @csrf
+                                            </form>
+
+                                            <a class="dropdown-item" href="#"
+                                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                                aria-label="Cerrar sesión">
+                                                Logout
+                                            </a>
                                         </li>
                                     </div>
                                 </ul>

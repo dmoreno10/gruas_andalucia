@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\AccessLog; // Importa el modelo de AccessLog
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
@@ -39,6 +41,7 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
+        try{
         // Verificar si el usuario está autenticado correctamente
         if ($user) {
             // Log de acceso exitoso
@@ -48,8 +51,13 @@ class LoginController extends Controller
                 'user_agent' => $request->userAgent(),
                 'status' => 'success',  // Establecer el estado de éxito
             ]);
-        }
+            $token = $user->createToken('practica')->plainTextToken; // Ejemplo de Laravel Sanctum
 
+        }
+    }
+        catch(Exception $e){
+            Log::error('Error registrando el acceso: ' . $e->getMessage());
+        }
         // Redirigir al dashboard o la ruta correspondiente después del login
         return redirect()->route('dashboard');  // O la ruta que desees redirigir
     }

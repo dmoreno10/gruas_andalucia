@@ -8,5 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Configuration extends Model
 {
     use HasFactory;
-    protected $fillable = ['logo', 'user_image'];
+
+    protected $fillable = ['file_id'];
+
+    // Relación de muchos a uno con File
+    public function file()
+    {
+        return $this->belongsTo(File::class);
+    }
 }

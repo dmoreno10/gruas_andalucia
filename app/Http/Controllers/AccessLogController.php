@@ -9,25 +9,19 @@ use Illuminate\Support\Facades\Auth;
 
 class AccessLogController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index(AccessLogDataTable $dataTable)
     {
-        return $dataTable->render('accesslogs.index'); // Muestra la vista con DataTable
+        return $dataTable->render('accesslogs.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create()
     {
         return view('accesslogs.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(Request $request)
     {
         // Validar la entrada
@@ -48,9 +42,7 @@ class AccessLogController extends Controller
         return redirect()->route('accesslogs.index')->with('success', 'Access log creado correctamente.');
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(string $id)
     {
         // Obtener el acceso log por ID
@@ -58,9 +50,7 @@ class AccessLogController extends Controller
         return view('accesslogs.show', compact('accessLog'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+
     public function edit(string $id)
     {
         // Obtener el acceso log por ID

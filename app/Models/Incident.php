@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Incident extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'title',
+        'description',
+        'status',
+        'created_at',
+        // agrega otros atributos que necesites aquí
+    ];
 }

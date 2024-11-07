@@ -23,4 +23,9 @@ class DocumentalGestion extends Model
     {
         return $this->belongsTo(User::class); // Relación con la tabla 'users'
     }
+    public function documentalGestion()
+    {
+        return $this->hasOne(DocumentalGestion::class);
+    }
+
 }

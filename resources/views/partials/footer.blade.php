@@ -29,6 +29,14 @@
     });
 </script>
 
+<!--   Core JS Files   -->
+<script src="{{ url('/dist/js/core/jquery-3.7.1.min.js') }}"></script>
+<script src="{{ url('/dist/js/core/popper.min.js') }}"></script>
+<script src="{{ url('/dist/js/core/bootstrap.min.js') }}"></script>
+
+<!-- Sweet Alert -->
+<script src="{{ url('/dist/js/plugin/sweetalert/sweetalert.min.js') }}"></script>
+
 <!-- jQuery Scrollbar -->
 <script src="{{ url('/dist/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js') }}"></script>
 
@@ -51,9 +59,6 @@
 <script src="{{ url('/dist/js/plugin/jsvectormap/jsvectormap.min.js') }}"></script>
 <script src="{{ url('/dist/js/plugin/jsvectormap/world.js') }}"></script>
 
-<!-- Sweet Alert -->
-<script src="{{ url('/dist/js/plugin/sweetalert/sweetalert.min.js') }}"></script>
-
 <!-- Kaiadmin JS -->
 <script src="{{ url('/dist/js/kaiadmin.min.js') }}"></script>
 
@@ -63,7 +68,7 @@
 <script src="{{ url('/dist/js/demo.js') }}"></script>
 
 @vite([
-    'resources\vue\app.js'
+    'resources/vue/app.js'
 ])
 
 @stack('scripts')

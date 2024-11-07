@@ -1,24 +1,22 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Accesos de los usuarios</h1>
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">Accesos de los Usuarios</h1>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Logs de acceso registrados</h3>
-                    </div>
+    <div class="card shadow">
+        <div class="card-header">
+            <h3 class="mb-0">Logs de Acceso Registrados</h3>
+        </div>
 
-                    <div class="card-body">
-                        <!-- DataTable para mostrar los logs -->
-                        {{ $dataTable->table() }}
-                    </div>
-                </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <!-- DataTable para mostrar los logs -->
+                {{ $dataTable->table(['class' => 'table table-striped table-bordered']) }}
             </div>
         </div>
     </div>
+</div>
 @endsection
 
 @push('scripts')

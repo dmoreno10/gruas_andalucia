@@ -40,6 +40,12 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'api' => [
+            'driver' => 'token', // or 'jwt' if you are using JWT authentication
+            'provider' => 'users',
+            'hash' => false, // Set to true if you want to hash the token
+        ],
     ],
 
     /*
@@ -98,6 +104,7 @@ return [
             'throttle' => 60,
         ],
     ],
+
 
     /*
     |--------------------------------------------------------------------------

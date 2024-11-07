@@ -7,7 +7,7 @@
         <i class="fas fa-edit"></i> Editar
     </button>
 
-    <form action="{{ route('incidents.destroy', $model->id) }}" method="POST" style="display: inline;">
+    <form action="{{ route('documents-gest.destroy', $model->id) }}" method="POST" style="display: inline;">
         @csrf
         @method('DELETE')
         <button type="button" class="btn btn-sm btn-danger btn-delete ms-2" data-id="{{ $model->id }}">

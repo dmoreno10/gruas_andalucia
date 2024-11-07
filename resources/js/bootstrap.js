@@ -1,4 +1,6 @@
 import 'bootstrap';
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -32,3 +34,12 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     forceTLS: (import.meta.env.VITE_PUSHER_SCHEME ?? 'https') === 'https',
 //     enabledTransports: ['ws', 'wss'],
 // });
+window.Pusher = Pusher;
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: '07dbe4f40bcc4b68a679', // Reemplaza con tu clave de Pusher
+    cluster: 'eu', // Reemplaza con tu cluster de Pusher
+    forceTLS: true,
+    encrypted: true,
+});

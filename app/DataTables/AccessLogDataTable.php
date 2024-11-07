@@ -23,13 +23,15 @@ class AccessLogDataTable extends DataTable
             ->addColumn('user', function ($log) {
                 return $log->user ? $log->user->name : 'Invitado';
             })
-            ->editColumn('created_at', function(AccessLog $model) {
+            ->editColumn('updated_at', function(AccessLog $model) {
                 return $model->created_at->format('d/m/Y H:i:s');
+            })
+            ->editColumn('login_at', function(AccessLog $model) { // Formatear la fecha de login
+                return $model->login_at ? $model->login_at->format('d/m/Y H:i:s') : 'N/A'; // Formato y manejo de null
             })
             ->addColumn('status', function ($log) {
                 return ucfirst($log->status); // Capitalizar el estado de acceso
             })
-            ->addColumn('action', 'accesslog.action') // Esto es para acciones como editar o eliminar
             ->setRowId('id');
     }
 
@@ -69,17 +71,10 @@ class AccessLogDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::computed('action') // Columna para las acciones (editar/eliminar)
-                ->exportable(false)
-                ->printable(false)
-                ->width(60)
-                ->addClass('text-center'),
-
             Column::make('id'), // ID del acceso
             Column::make('user'), // Usuario asociado al acceso
-            Column::make('ip_address')->title('IP Address'), // Dirección IP
-            Column::make('user_agent')->title('User Agent'), // User agent del acceso
             Column::make('status')->title('Status'), // Estado de acceso
+            Column::make('updated_at')->title('Logeado en'), // Columna para la fecha de creación
         ];
     }
 

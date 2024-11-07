@@ -44,4 +44,8 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function profileImage()
+    {
+        return $this->belongsTo(File::class, 'profile_image_id'); // 'profile_image_id' es la clave foránea
+    }
 }

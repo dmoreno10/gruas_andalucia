@@ -2,16 +2,81 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\AccessLogDataTable;
 use App\DataTables\UsersDataTable;
+use App\Events\UserUpdated;
+use App\Models\AccessLog;
+use App\Models\Configuration;
+use App\Models\File;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Illuminate\Http\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash as FacadesHash;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Yajra\DataTables\EloquentDataTable;
+use Yajra\DataTables\QueryDataTable;
 
 class UserController extends Controller
 {
+    public function updateProfileImage(Request $request)
+{
+    // Validar que la imagen es correcta
+    $request->validate([
+        'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    $user = Auth::user();
+
+    // Subir la nueva imagen de perfil
+    if ($request->hasFile('profile_image')) {
+        $imagePath = $request->file('profile_image')->store('profile_images', 'public');
+
+        // Si el usuario ya tiene una imagen de perfil, elimina la anterior
+        if ($user->profile_image) {
+            Storage::disk('public')->delete($user->profile_image);
+        }
+
+        // Actualiza la imagen de perfil en la base de datos
+        $user->profile_image = $imagePath;
+        $user->save();
+    }
+
+    return response()->json(['message' => 'Imagen actualizada correctamente'], 200);
+}
+
+    /**
+     * Actualizar la imagen de perfil en la configuración global.
+     */
+    private function updateConfigurationProfileImage($imagePath)
+    {
+        // Si la configuración ya tiene un campo 'profile_image', lo actualizamos
+        $configuration = Configuration::find(1); // Encuentra la configuración global (ajusta el ID si es necesario)
+        if ($configuration) {
+            $configuration->profile_image = $imagePath;
+            $configuration->save();
+        }
+    }
+    public function dataTable(QueryBuilder $query): EloquentDataTable
+{
+    return (new EloquentDataTable($query))
+        ->editColumn('created_at', function(User $model) {
+            return $model->created_at->format('d/m/Y H:i:s');
+        })
+        ->editColumn('updated_at', function(User $model) {
+            return $model->updated_at->format('d/m/Y H:i:s');
+        })
+        ->addColumn('action', 'users.action')
+        ->setRowId('id');
+}
+public function query(User $model): QueryBuilder
+{
+    return $model->newQuery()->orderBy('id', 'asc');
+}
 
     /**
      * Display a listing of the resource.
@@ -33,31 +98,30 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        // No requerimos autenticación para crear un usuario
-        // Eliminamos esta verificación
-        // if (!Auth::check()) {
-        //     return redirect()->route('login')->with('message', 'Debes iniciar sesión para crear un usuario.');
-        // }
 
-        // Validación de los datos del formulario
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
+        public function store(Request $request)
+        {
+            // Validación de los datos del formulario
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'password' => 'required|string|min:8|confirmed',
+            ]);
 
-        // Crear el usuario con los datos validados
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),  // Usamos Hash::make para cifrar la contraseña
-        ]);
+            // Crear un nuevo usuario
+            Log::info('Datos recibidos: ', $request->all());
 
-        // Redirigir al usuario con un mensaje de éxito
-        return redirect()->route('users.index')->with('success', 'Usuario creado correctamente.');
+            $user = new User();
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
+            $user->save();
+
+
+
+                return redirect()->route('login')->with('success', 'Usuario creado, por favor inicie sesión.');
     }
+
 
     /**
      * Display the specified resource.
@@ -67,6 +131,30 @@ class UserController extends Controller
         $user = User::findOrFail($id); // Obtén el usuario por ID
         return response()->json($user); // Devuelve los datos del usuario en formato JSON
     }
+    public function profile(AccessLogDataTable $dataTable)
+{
+    // Obtén el usuario autenticado
+    $user = Auth::user();
+
+    // Filtra los logs del usuario autenticado
+    $logs = AccessLog::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+    $lastLoginLog = AccessLog::where('user_id', $user->id)->orderBy('created_at', 'desc')->first();
+
+    // Devuelve la vista del perfil con los logs y el usuario
+    return $dataTable->render('users.profile', compact('user', 'logs', 'lastLoginLog'));
+}
+
+    public function showProfile()
+{
+    $user = Auth::user(); // Obtenemos el usuario autenticado
+    // Asegúrate de cargar la relación profileImage si es necesario
+    $user->load('profileImage');
+
+    return view('profile.show', [
+        'user' => $user,
+    ]);
+}
+
 
     /**
      * Show the form for editing the specified resource.
@@ -98,6 +186,9 @@ class UserController extends Controller
 
         $user->save();
 
+        // Dispara el evento después de guardar el usuario
+        broadcast(new UserUpdated($user))->toOthers();
+
         return response()->json(['message' => 'Usuario actualizado correctamente.']);
     }
 
@@ -109,4 +200,16 @@ class UserController extends Controller
         User::destroy($id);
         return redirect()->route('users.index');
     }
+    public function downloadUserProfile($id)
+    {
+        $user = User::findOrFail($id); // Obtener el usuario por su ID
+
+        // Cargar la vista con los datos del usuario
+        $pdf = Pdf::loadView('pdf.user_profile', compact('user'));
+
+        // Descargar el PDF, usando el nombre del usuario en el archivo
+        return $pdf->download('user_profile_' . $user->name . '.pdf');
+    }
+
+
 }

@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('configurations', function (Blueprint $table) {
-            $table->string('user_image')->nullable(); // Puedes usar `nullable()` si es opcional
-        });
+        // Schema::table('configurations', function (Blueprint $table) {
+        //     $table->string('user_image')->nullable(); // Puedes usar `nullable()` si es opcional
+        // });
     }
 
     public function down()

@@ -22,7 +22,7 @@ class DocumentalGestionDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->addColumn('action', 'documentalgestion.action')
+            ->addColumn('action', 'documents.action')
             ->setRowId('id');
     }
 
@@ -62,12 +62,6 @@ class DocumentalGestionDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::computed('action')
-                ->exportable(false)
-                ->printable(false)
-                ->width(60)
-                ->addClass('text-center'),
-            Column::make('id'),
             Column::make('title')->title('Título'),
             Column::make('description')->title('Descripción'),
             Column::make('file_path')->title('Archivo')->render(function($data) {
@@ -78,11 +72,13 @@ class DocumentalGestionDataTable extends DataTable
                     }
                     return $links;
                 }
-                return '<a href="/storage/'.$data.'" target="_blank">Ver Archivo</a>';
             }),
-            Column::make('user_id')->title('User ID'),  // Agregar esta línea
             Column::make('created_at')->title('Fecha de Creación'),
-            Column::make('updated_at')->title('Fecha de Actualización'),
+            Column::computed('action')
+            ->exportable(false)
+            ->printable(false)
+            ->width(60)
+            ->addClass('text-center'),
         ];
     }
 

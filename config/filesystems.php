@@ -32,16 +32,16 @@ return [
 
         'local' => [
             'driver' => 'local',
-            'root' => storage_path('app/private'),
-            'serve' => true,
+            'root' => storage_path('app'),  // Cambié a 'app', que es la ubicación por defecto de Laravel
+            'visibility' => 'private',  // Esto significa que los archivos son privados
             'throw' => false,
         ],
 
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
-            'visibility' => 'public',
+            'root' => storage_path('app/public'),  // Correcto para almacenamiento público
+            'url' => env('APP_URL').'/storage',  // URL para acceder a los archivos públicos
+            'visibility' => 'public',  // Asegura que los archivos son accesibles públicamente
         ],
 
         's3' => [

@@ -1,4 +1,4 @@
-<!-- resources/views/users/show.blade.php -->
+{{-- <!-- resources/views/users/show.blade.php -->
 
 <!DOCTYPE html>
 <html>
@@ -12,4 +12,4 @@
     <p>Email: {{ $user->email }}</p>
     <!-- Agrega más campos según sea necesario -->
 </body>
-</html>
+</html> --}}

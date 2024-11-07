@@ -2,42 +2,65 @@
 
 @section('content')
 <div class="container mt-5">
-    <h1 class="mb-4">Configuración</h1>
+    <h1 class="mb-4 text-center text-primary">Configuración de la Cuenta</h1>
 
     <!-- Mensaje de éxito al actualizar la configuración -->
     @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+        <div id="successMessage" class="alert alert-success alert-dismissible fade show text-center" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
     @endif
 
     <!-- Formulario para crear o actualizar configuración -->
-    <form action="{{ route('configuration.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('configuration.store') }}" method="POST" enctype="multipart/form-data" class="bg-white p-4 rounded shadow-lg" style="max-width: 600px; margin: 0 auto;">
         @csrf
 
-        <!-- Logo -->
-        <div class="form-group">
-            <label for="logo">Logo</label>
-            @if(isset($configuracion) && $configuracion->logo)
-                <p>Logo actual: <img src="{{ asset('storage/' . $configuracion->logo) }}" width="100" alt="Logo"></p>
-            @endif
-            <input type="file" name="logo" class="form-control">
-            @error('logo')<div class="alert alert-danger">{{ $message }}</div>@enderror
-        </div>
+        <div class="mb-4">
+            <h4 class="mb-3 text-center text-secondary">Cargar Imágenes</h4>
 
-        <!-- Imagen de usuario -->
-        <div class="form-group">
-            <label for="user_image">Imagen de Usuario</label>
-            @if(isset($configuracion) && $configuracion->user_image)
-                <p>Imagen de usuario actual: <img src="{{ asset('storage/' . $configuracion->user_image) }}" width="100" alt="Imagen de usuario"></p>
-            @endif
-            <input type="file" name="user_image" class="form-control">
-            @error('user_image')<div class="alert alert-danger">{{ $message }}</div>@enderror
+            <!-- Logo -->
+            <div class="form-group mb-4 text-center">
+                <label for="logo" class="form-label">Logo</label>
+                <div class="input-group">
+                    <input type="file" name="logo" class="form-control" accept="image/*" id="logo">
+                </div>
+                @error('logo')
+                    <div class="alert alert-danger mt-2">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <!-- Imagen de usuario -->
+            <div class="form-group mb-4 text-center">
+                <label for="user_image" class="form-label">Imagen de Usuario</label>
+                <div class="input-group">
+                    <input type="file" name="user_image" class="form-control" accept="image/*" id="user_image">
+                </div>
+                @error('user_image')
+                    <div class="alert alert-danger mt-2">{{ $message }}</div>
+                @enderror
+            </div>
         </div>
 
         <!-- Botón para guardar la configuración -->
-        <button type="submit" class="btn btn-primary">Guardar configuración</button>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm">Guardar Configuración</button>
+        </div>
     </form>
-
 </div>
+
 @endsection
 
-
+@push('scripts')
+<script>
+    // Espera 5 segundos (5000 milisegundos) y luego oculta el mensaje de éxito
+    setTimeout(() => {
+        const successMessage = document.getElementById('successMessage');
+        if (successMessage) {
+            // Utiliza Bootstrap para ocultar la alerta
+            successMessage.classList.remove('show');  // Quita la clase 'show'
+            successMessage.classList.add('fade');  // Añade la clase 'fade'
+        }
+    }, 5000); // 5000 ms = 5 segundos
+</script>
+@endpush

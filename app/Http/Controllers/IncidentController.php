@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\DataTables\IncidentsDataTable;
 use App\Models\Incident;
+use App\Models\User;
+use App\Notifications\IncidentCreated;
+use App\Notifications\IncidentUpdated;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 
 class IncidentController extends Controller
 {
@@ -14,7 +18,8 @@ class IncidentController extends Controller
      * Display a listing of the resource.
      */
     public function index(IncidentsDataTable $dataTable){
-        return $dataTable->render('incidents.index');
+        $notifications = Auth::user()->notifications;
+        return $dataTable->render('incidents.index',compact('notifications'));
     }
     /**
      * Show the form for creating a new resource.
@@ -36,14 +41,15 @@ class IncidentController extends Controller
             'created_at' => 'required|date',
         ]);
 
-        $incident = new Incident();
-        $incident->title = $request->title;
-        $incident->description = $request->description;
-        $incident->status = $request->status;
-        $incident->created_at = $request->created_at;
-        $incident->user_id = Auth::id();
-        $incident->save();
-
+        $incident = Incident::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'status' => $request->status,
+            'created_at' => $request->created_at,
+            'user_id' => Auth::id(),
+        ]);
+        // Enviar notificación a todos los usuarios
+        $users = User::all();
         return redirect()->route('incidents.index')->with('success', 'Incidente creado exitosamente.');
     }
 
@@ -97,6 +103,7 @@ class IncidentController extends Controller
     $incident->save();
 
     // Redirecciona con un mensaje de éxito
+    $users = User::all();
 
     return response()->json(['message' => 'Usuario actualizado correctamente.']);
 

@@ -15,4 +15,14 @@ class File extends Model
         'mime_type',
         'file_size',
     ];
+    public function configuration()
+    {
+        return $this->hasOne(Configuration::class);
+    }
+    // App/Models/File.php
+      public function documentalGestion()
+    {
+        return $this->hasOne(DocumentalGestion::class); // Ajusta esto si es necesario
+    }
+
 }

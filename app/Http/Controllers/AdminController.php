@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AccessLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,6 +25,12 @@ class AdminController extends Controller
 
 
         if (Auth::attempt($credentials)) {
+            AccessLog::create([
+                'user_id' => Auth::user()->id,
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+                'status' => 'success',  // Establecer el estado de éxito
+            ]);
 
             return redirect('/');
         }
