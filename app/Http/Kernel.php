@@ -53,6 +53,7 @@ class Kernel extends HttpKernel
         'auth' => \App\Http\Middleware\Authenticate::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class, // Cambiado a RedirectIfAuthenticated
         'allow_guest_creation' => \App\Http\Middleware\AllowGuestUserCreation::class,
+        'role'=>\App\Http\Middleware\RoleMiddleware::class,
         // Otros middleware que puedas necesitar
     ];
 }

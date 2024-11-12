@@ -95,26 +95,28 @@ Route::middleware('auth')->group(function () {
     Route::get('tasks/start/{id}', [TaskController::class, 'start'])->name('tasks.start');
     Route::post('/tasks/stop/{id}', [TaskController::class, 'stop'])->name('tasks.stop');
     Route::post('/tasks/cancel/{id}', [TaskController::class, 'cancel'])->name('tasks.cancel');
+
+    Route::resource('time-entries', TimeEntryController::class);
+    Route::resource('documents-gest', DocumentalGestionController::class);
+    Route::get('time-entries/get/Data', [TimeEntryController::class, 'getData']);
+    Route::post('time-entries/start', [TimeEntryController::class, 'start']);
+    Route::post('time-entries/end', [TimeEntryController::class, 'end']);
+
+    // Rutas relacionadas con eventos
+    Route::resource('events', EventController::class);
+    Route::get('/events/get/data', [EventController::class, 'getData']);
+
+    // Rutas API agrupadas bajo el prefijo 'api' y con autenticación
+    Route::prefix('api')->middleware('auth:api')->group(function () {
+        Route::get('/employees', [EmployeesController::class, 'index']);
+        Route::apiResource('points', PointController::class);
+        Route::get('/rankings', [RankingController::class, 'index']);
+        Route::post('tasks/{id}/complete', [TaskController::class, 'complete'])->name('tasks.complete');
+    });
+
+
+
 });
 
 // Rutas relacionadas con entradas de tiempo
-Route::resource('time-entries', TimeEntryController::class);
-Route::resource('documents-gest', DocumentalGestionController::class);
-Route::get('time-entries/get/Data', [TimeEntryController::class, 'getData']);
-Route::post('time-entries/start', [TimeEntryController::class, 'start']);
-Route::post('time-entries/end', [TimeEntryController::class, 'end']);
-
-// Rutas relacionadas con eventos
-Route::resource('events', EventController::class);
-Route::get('/events/get/data', [EventController::class, 'getData']);
-
-// Rutas API agrupadas bajo el prefijo 'api' y con autenticación
-Route::prefix('api')->middleware('auth:api')->group(function () {
-    Route::get('/employees', [EmployeesController::class, 'index']);
-    Route::apiResource('points', PointController::class);
-    Route::get('/rankings', [RankingController::class, 'index']);
-    Route::post('tasks/{id}/complete', [TaskController::class, 'complete'])->name('tasks.complete');
-});
-
-
 

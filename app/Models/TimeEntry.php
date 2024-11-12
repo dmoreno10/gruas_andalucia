@@ -9,7 +9,16 @@ class TimeEntry extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id','employee_id', 'start_time', 'end_at'];
+    /**
+     * The database table used by the model.
+     *
+     * @var string
+     */
+
+    protected $fillable = ['user_id','employee_id', 'start_time', 'ended_at','end_time'];
+    protected $dates = ['start_time', 'end_time'];
+
+
     // Definir la relación con el empleado
     public function employee()
     {

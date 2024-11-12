@@ -16,17 +16,17 @@ class TimeEntryDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
 {
     return (new EloquentDataTable($query))
-        ->editColumn('start_time', function (TimeEntry $model) {
-            return Carbon::parse($model->start_time)->setTimezone('Europe/Madrid')->format('d/m/Y H:i:s');
-        })
-        ->editColumn('ended_at', function (TimeEntry $model) {
-            return $model->ended_at ? Carbon::parse($model->ended_at)->setTimezone('Europe/Madrid ')->format('d/m/Y H:i:s') : 'N/A';
-        })
         ->addColumn('total', function (TimeEntry $model) {
-            if ($model->ended_at) {
+            if ($model->end_time) {
                 $start = Carbon::parse($model->start_time);
-                $end = Carbon::parse($model->ended_at);
-                return $start->diffInMinutes($end);
+                $end = Carbon::parse($model->end_time);
+
+                // Calcular la diferencia en minutos
+                $minutes = $start->diffInMinutes($end);
+
+                // Convertir a horas y limitar a dos decimales
+                $hours = $minutes / 60;
+                return number_format($hours, 2);  // Redondear a dos decimales
             }
             return 0;
         })
@@ -36,36 +36,30 @@ class TimeEntryDataTable extends DataTable
 
     public function query(TimeEntry $model): QueryBuilder
     {
-        // Obtener todas las entradas de tiempo ordenadas por ID
-        return $model->newQuery()->with('employee')->orderBy('id', 'asc');
+        return $model->newQuery()->with('employee')->orderBy('id', 'desc');
     }
 
-    public function html()
+    public function html(): HtmlBuilder
     {
         return $this->builder()
-            ->columns([
-                Column::make('id')->title('ID'),
-                Column::make('employee.name')->title('Empleado'),
-                Column::make('start_time')->title('Inicio de Jornada'),
-                Column::make('ended_at')->title('Fin de Jornada'),
-                Column::make('total')->title('Total (min)'),
-                Column::make('total_extra')->title('Total Extra (horas)'),
-            ])
-            ->parameters([
-                'dom' => 'Bfrtip', // Personalización de los botones y la vista
-                'pageLength' => 10, // Número de filas por página
-            ]);
+            ->parameters(["language" =>  ["url" => "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"]])
+            ->responsive()
+            ->setTableId('entries-table')
+            ->addTableClass('table-bordered w-100')
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->orderBy(1)
+            ->lengthChange(false);
     }
 
     public function getColumns(): array
     {
         return [
-            Column::make('id')->title('ID'),
+            // Column::make('id')->title('ID'),
             Column::make('employee.name')->title('Empleado'),
             Column::make('start_time')->title('Inicio de Jornada'),
-            Column::make('ended_at')->title('Fin de Jornada'),
+            Column::make('end_time')->title('Fin de Jornada'),
             Column::make('total')->title('Total (min)'),
-            Column::make('total_extra')->title('Total Extra (horas)'),
         ];
     }
 

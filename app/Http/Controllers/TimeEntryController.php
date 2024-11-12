@@ -38,12 +38,11 @@ class TimeEntryController extends Controller
             $employee_id = 1;
 
             Log::info('Información recibida del frontend:', $request->all());
-
+            $start_time=Carbon::now();
             $timeEntry = TimeEntry::create([
                 'user_id' => $user->id,
                 'employee_id' => $employee_id,
-                'start_time' =>  Carbon::now('Europe/Madrid'),
-                'ended_at' => null,
+                'start_time' => $start_time,
             ]);
             Log::info('Start-time al principio: '. $timeEntry->start_time);
 
@@ -66,45 +65,28 @@ class TimeEntryController extends Controller
             // Buscar la entrada de tiempo activa para el usuario y empleado
             $timeEntry = TimeEntry::where('user_id', $user->id)
                 ->where('employee_id', $employee_id)
-                ->whereNull('ended_at') // Solo busca entradas que no han sido terminadas
+                ->whereNull('end_time') // Solo busca entradas que no han sido terminadas
                 ->first();
+
 
             // Si no se encuentra una jornada activa, se retorna un error
             if (!$timeEntry) {
                 return response()->json(['message' => 'No hay una jornada activa para terminar.'], 404);
             }
 
-            // Limpiar el valor recibido de 'ended_at' (si es necesario)
-            $endedAtString = $request->input('ended_at');
-            $endedAtString = str_replace(',', '', $endedAtString); // Limpiar la coma si existe
-
-            // Log para verificar el valor de 'ended_at' recibido
-            Log::info('Valor de ended_at recibido desde frontend: ' . $endedAtString);
-
-            // Asegurarse de que el valor de 'ended_at' se maneje correctamente
-            try {
-                $endedAt = Carbon::createFromFormat('d/m/Y H:i:s', $endedAtString)
-                    ->setTimezone('Europe/Madrid');
-            } catch (\Exception $e) {
-                try {
-                    // Si falla el primer intento, intenta con el formato ISO
-                    $endedAt = Carbon::parse($endedAtString)->setTimezone('Europe/Madrid');
-                } catch (\Exception $e) {
-                    Log::error('Error al parsear la fecha de ended_at: ' . $e->getMessage());
-                    return response()->json(['message' => 'Formato de fecha inválido'], 400);
-                }
-            }
-
-            // Log para verificar la fecha convertida a la zona horaria
-            Log::info('Fecha convertida (zona horaria Europe/Madrid): ' . $endedAt);
 
             // Aquí solo actualizamos 'ended_at', nunca 'start_time'
-            $timeEntry->ended_at = $endedAt;
+            Log::info('Antes de la actualización: start_time = ' . $timeEntry->start_time);
+            $nuevaFecha = Carbon::now()->setTimezone('Europe/Madrid');
+            $timeEntry->fill(['end_time' => $nuevaFecha]);
             $timeEntry->save();
+            Log::info('Después de la actualización: start_time = ' . $timeEntry->start_time);
+            Log::info('Después de la actualización: end_time = ' . $timeEntry->end_time);
 
-            // Log para verificar el valor de 'ended_at' después de actualizar la base de datos
-            Log::info('Jornada terminada, ended_at guardado: ' . $timeEntry->ended_at);
-            Log::info('start_time sigue siendo: ' . $timeEntry->start_time);
+
+            // // Log para verificar el valor de 'ended_at' después de actualizar la base de datos
+            // Log::info('Jornada terminada, ended_at guardado: ' . $timeEntry->ended_at);
+            // Log::info('start_time sigue siendo: ' . $timeEntry->start_time);
 
             // Devolver la respuesta
             return response()->json([

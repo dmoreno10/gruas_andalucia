@@ -42,6 +42,7 @@ class TasksDataTable extends DataTable
      */
     public function query(Task $model): QueryBuilder
     {
+
         return $model->newQuery()->with('employee')->orderBy('id', 'asc'); // Asegúrate de incluir la relación
     }
 
