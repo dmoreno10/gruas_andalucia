@@ -34,24 +34,30 @@ class IncidentController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        // Validar los datos de la incidencia
+        $validated = $request->validate([
             'title' => 'required|max:100',
             'description' => 'required',
-            'status' => 'required',
+            'status' => 'required|in:abierto,cerrado,en_progreso', 
             'created_at' => 'required|date',
         ]);
-
+    
+        // Crear la incidencia con los datos validados
         $incident = Incident::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'status' => $request->status,
-            'created_at' => $request->created_at,
-            'user_id' => Auth::id(),
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'status' => $validated['status'],
+            'created_at' => $validated['created_at'],
+            'user_id' => Auth::id(), 
         ]);
-        // Enviar notificación a todos los usuarios
-        $users = User::all();
-        return redirect()->route('incidents.index')->with('success', 'Incidente creado exitosamente.');
+    
+        
+        return response()->json([
+            'message' => 'Incidencia creada correctamente.',
+            'incident' => $incident,
+        ], 201);
     }
+    
 
 
     /**
@@ -73,13 +79,14 @@ class IncidentController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit($id)
-    {
-        // Obtén la incidencia por ID
-        $incident = Incident::findOrFail($id);
-
-        // Retorna la vista de edición con los datos de la incidencia
-        return view('incidents.edit', ['incident' => $incident]);
+{
+    $incident = Incident::find($id);
+    if (!$incident) {
+        return response()->json(['error' => 'Incidencia no encontrada'], 404);
     }
+    return response()->json(['incident' => $incident]);
+}
+
 
     /**
      * Update the specified resource in storage.

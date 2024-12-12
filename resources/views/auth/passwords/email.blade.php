@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Reset Password') }}</div>
+                <div class="card-header">{{ __('Restablecer Contraseña') }}</div>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -34,10 +34,10 @@
                         <div class="row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary me-2">
-                                    {{ __('Send Password Reset Link') }}
+                                    {{ __('Restablecer contraseña') }}
                                 </button>
                                 <a href="{{ route('login') }}" class="btn btn-secondary">
-                                    {{ __('Back to Login') }}
+                                    {{ __('Volver al inicio') }}
                                 </a>
                             </div>
                         </div>

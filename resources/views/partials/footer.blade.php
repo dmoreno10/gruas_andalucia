@@ -29,6 +29,7 @@
     });
 </script>
 
+
 <!--   Core JS Files   -->
 <script src="{{ url('/dist/js/core/jquery-3.7.1.min.js') }}"></script>
 <script src="{{ url('/dist/js/core/popper.min.js') }}"></script>

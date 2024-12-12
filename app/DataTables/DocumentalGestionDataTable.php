@@ -21,9 +21,7 @@ class DocumentalGestionDataTable extends DataTable
      */
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
-        return (new EloquentDataTable($query))
-            ->addColumn('action', 'documents.action')
-            ->setRowId('id');
+        return (new EloquentDataTable($query))->addColumn('action', 'documents.action')->setRowId('id');
     }
 
     /**
@@ -31,30 +29,24 @@ class DocumentalGestionDataTable extends DataTable
      */
     public function query(DocumentalGestion $model): QueryBuilder
     {
-        return $model->newQuery()->orderBy('id', 'asc');
+        return $model->newQuery();
     }
 
     /**
      * Optional method if you want to use the html builder.
      */
-    public function html(): HtmlBuilder
+    public function html()
     {
         return $this->builder()
-                    ->setTableId('documentalgestion-table')
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
-                    //->dom('Bfrtip')
-                    ->orderBy(1)
-                    ->selectStyleSingle()
-                    ->buttons([
-                        Button::make('excel'),
-                        Button::make('csv'),
-                        Button::make('pdf'),
-                        Button::make('print'),
-                        Button::make('reset'),
-                        Button::make('reload')
-                    ]);
-    }
+            ->parameters(["language" => ["url" =>"//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"]])
+            ->responsive()
+            ->setTableId('documentalgestion-table')
+            ->addTableClass('table-bordered w-100')
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->orderBy(1)
+            ->lengthChange();
+}
 
     /**
      * Get the dataTable columns definition.
@@ -64,21 +56,19 @@ class DocumentalGestionDataTable extends DataTable
         return [
             Column::make('title')->title('Título'),
             Column::make('description')->title('Descripción'),
-            Column::make('file_path')->title('Archivo')->render(function($data) {
-                if (is_array($data)) {
-                    $links = '';
-                    foreach ($data as $file) {
-                        $links .= '<a href="/storage/'.$file.'" target="_blank">Ver Archivo</a><br>';
+            Column::make('file_path')
+                ->title('Archivo')
+                ->render(function ($data) {
+                    if (is_array($data)) {
+                        $links = '';
+                        foreach ($data as $file) {
+                            $links .= '<a href="/storage/' . $file . '" target="_blank">Ver Archivo</a><br>';
+                        }
+                        return $links;
                     }
-                    return $links;
-                }
-            }),
+                }),
             Column::make('created_at')->title('Fecha de Creación'),
-            Column::computed('action')
-            ->exportable(false)
-            ->printable(false)
-            ->width(60)
-            ->addClass('text-center'),
+            Column::computed('action')->exportable(false)->printable(false)->width(60)->addClass('text-center'),
         ];
     }
 

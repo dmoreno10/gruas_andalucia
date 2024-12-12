@@ -2,8 +2,14 @@
 
 @section('content')
 <div class="container mt-5">
+    
     <h1 class="mb-4 text-center">Gestión Documental</h1>
-
+    <div class="d-flex align-items-center  mb-3">
+        <a href="javascript:history.back()" class="me-2">
+            <i style="color: black;" class="fas fa-arrow-left"></i>
+        </a>
+        <p class="mb-0">Atrás</p>
+    </div>
     <div class="d-flex justify-content-end mb-3">
         <a href="{{ route('documents-gest.create') }}" class="btn btn-primary">
             Añadir Documento
@@ -23,7 +29,7 @@
     </div>
 </div>
 
-<document-crud></document-crud>
+{{-- <document-crud></document-crud> --}}
 @endsection
 
 @push('scripts')

@@ -89,11 +89,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Employee Profile</h1>
 
-        <div class="profile-picture">
-            <img src="https://via.placeholder.com/120" alt="Employee Picture"> <!-- Placeholder para la imagen -->
-        </div>
 
         <table class="profile-table">
             <tr>

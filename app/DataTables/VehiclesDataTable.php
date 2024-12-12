@@ -42,42 +42,30 @@ class VehiclesDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->columns([
-                Column::make('id')->title('ID'),
-                Column::make('brand')->title('Marca'),
-                Column::make('model')->title('Modelo'),
-                Column::make('year')->title('Año'),
-                Column::make('type')->title('Tipo'),
-                Column::make('color')->title('Color'),
-                Column::make('status')->title('Estado'),
-                Column::make('photo')->title('Fotos')->render(function ($vehicle) {
-                    $photos = json_decode($vehicle->photo);
-                    $output = '';
-
-                    if ($photos) {
-                        foreach ($photos as $photo) {
-                            $output .= '<img src="' . asset('storage/' . $photo) . '" alt="Vehicle Photo" class="img-thumbnail" style="width: 50px; height: auto; margin-right: 5px;">';
-                        }
-                    }
-
-                    return $output; // Devuelve el HTML para mostrar las imágenes
-                })->orderable(false), // Desactiva el ordenamiento en esta columna
-            ])
+            ->parameters(['language' => ['url' => '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json']])
+            ->responsive()
+            ->setTableId('users-table')
+            ->addTableClass('table-bordered w-100')
+            ->columns($this->getColumns())
             ->minifiedAjax()
-            ->parameters([
-                'dom' => 'Bfrtip',
-                'language' => [
-                    'url' => url('path/to/your/language.json') // Cambia esto por la ruta de tu archivo de idioma
-                ],
-                'buttons' => [
-                    Button::make('export'),
-                    Button::make('print'),
-                    Button::make('reset'),
-                    Button::make('reload'),
-                ],
-            ]);
+            ->orderBy(1)
+            ->lengthChange();
     }
-
+    
+    public function getColumns(): array
+    {
+        return [
+            Column::make('id')->title('ID'),
+            Column::make('license_plate')->title('Matrícula'),
+            Column::make('brand')->title('Marca'),
+            Column::make('model')->title('Modelo'),
+            Column::make('year')->title('Año'),
+            Column::make('type')->title('Tipo'),
+            Column::make('color')->title('Color'),
+            Column::make('status')->title('Estado'),
+            Column::make('created_at')->title('Fecha de llegada'),
+        ];
+    }
 
     /**
      * Get the filename for export.

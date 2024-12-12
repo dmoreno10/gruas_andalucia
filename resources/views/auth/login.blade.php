@@ -5,13 +5,24 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="text-center mb-4">
-                <img
-                    src="{{ Vite::asset('resources/dist/img/logic-sistemas.png') }}"
-                    alt="Logic Sistemas"
-                    class="navbar-brand"
-                    height="100"
-                    width="100"
-                />
+                <h1 style="
+                    font-family: 'Arial', sans-serif; 
+                    font-size: 2.5rem; 
+                    font-weight: 400; 
+                    color: #343a40; 
+                    text-transform: capitalize; 
+                    position: relative; 
+                    display: inline-block;">
+                    Grúas Andalucía
+                    <span style="
+                        content: '';
+                        display: block; 
+                        width: 80%; 
+                        height: 2px; 
+                        background-color: #343a40; 
+                        margin: 0.5rem auto 0;">
+                    </span>
+                </h1>
             </div>
 
             <div class="card shadow-sm">
@@ -44,13 +55,13 @@
                         <div class="mb-3 form-check">
                             <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
                             <label class="form-check-label" for="remember">
-                                {{ __('Remember Me') }}
+                                {{ __('Recordar contraseña') }}
                             </label>
                         </div>
 
                         <div class="d-flex justify-content-center mb-4">
                             <button type="submit" class="btn btn-primary me-2">
-                                {{ __('Login') }}
+                                {{ __('Iniciar Sesión') }}
                             </button>
 
                             @if (Route::has('password.request'))
@@ -64,9 +75,9 @@
                     <hr class="my-4"> <!-- Línea horizontal -->
 
                     <div class="text-center" style="color: rgb(97, 79, 79);">
-                        <p>¿Eres nuevo en Logic Sistemas?</p>
+                        <p>¿Eres nuevo?</p>
                         <a href="{{ route('users.create') }}" class="btn btn-outline-dark btn-sm">
-                            Crear tu cuenta de Logic Sistemas
+                            Crear tu cuenta en Grúas Andalucía
                         </a>
                     </div>
                 </div>

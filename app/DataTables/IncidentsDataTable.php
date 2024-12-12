@@ -36,7 +36,6 @@ class IncidentsDataTable extends DataTable
                    }
             })
             ->rawColumns(['status_icon','action']) // Permitir HTML en la columna
-            ->addColumn('action', 'incidents.action')
             ->setRowId('id');
     }
 
@@ -54,23 +53,15 @@ class IncidentsDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->columns([
-                // Otras columnas...
-                Column::make('title')->title('Título'),
-                Column::make('status')->title('Estado de incidencia'),
-                Column::make('status_icon')->title('Estado')->orderable(false)->searchable(false), // Añadir esta línea
-                Column::make('created_at')->title('Fecha de Creación'),
-                Column::computed('action')->title('Acciones')
-                ->exportable(false)
-                ->printable(false)
-                ->width(60)
-                ->addClass('text-center'),
-            ])
-            ->parameters([
-                'dom' => 'Bfrtip',
-                // Otras configuraciones...
-            ]);
-    }
+            ->parameters(["language" =>  ["url" =>"//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"]])
+            ->responsive()
+            ->setTableId('incidents-table')
+            ->addTableClass('table-bordered w-100')
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->orderBy(1)
+            ->lengthChange();
+}
 
     /**
      * Get the dataTable columns definition.
@@ -79,15 +70,15 @@ class IncidentsDataTable extends DataTable
     {
         return [
 
-            Column::make('id') // ID del Incidente
+            Column::make('id') 
                   ->title('ID'),
-            Column::make('title') // Descripción o Título del Incidente
+            Column::make('title') 
                   ->title('Título'),
-            Column::make('status') // Estado del Incidente
+            Column::make('status') 
                   ->title('Estado'),
-            Column::make('created_at') // Fecha de Creación
+            Column::make('created_at') 
                   ->title('Fecha Creación'),
-            Column::computed('action') // Columna de acciones
+            Column::computed('action') 
                   ->exportable(false)
                   ->printable(false)
                   ->width(60)

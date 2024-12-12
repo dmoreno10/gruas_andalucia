@@ -27,10 +27,7 @@ export default {
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '{{ route("users.index") }}',
-                    data: d => {
-                        Object.assign(d, this.filters); // Añadir filtros avanzados de Vue
-                    }
+                    url: '{{ route("users.index") }}'
                 },
                 columns: [
                     { data: 'name', name: 'name' },

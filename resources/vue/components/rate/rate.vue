@@ -1,4 +1,10 @@
 <template>
+      <div class="d-flex align-items-center  mb-3">
+            <a href="javascript:history.back()" class="me-2">
+                <i style="color: black;" class="fas fa-arrow-left"></i>
+            </a>
+            <p class="mb-0">Atrás</p>
+        </div>
     <div id="gradient">
         <main class="container-xl d-flex flex-column justify-content-center align-items-center">
             <section class="row pt-4 pb-4">

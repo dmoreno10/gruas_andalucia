@@ -20,11 +20,13 @@ class EmployeeDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->addColumn('action', 'employees.action') // Cambiado a la vista de acciones de empleados
-            ->editColumn('created_at', function(Employee $model) {
+            ->editColumn('created_at', function (Employee $model) {
                 return $model->created_at->format('d/m/Y H:i:s'); // Formato de la fecha
             })
-            ->rawColumns(['action']) // Permitir HTML en la columna de acciones
+            ->addColumn('company', function (Employee $model) {
+                return $model->company ? $model->company->name : 'Sin empresa'; // Muestra el nombre de la empresa
+            })
+            ->addColumn('action', 'employees.action')
             ->setRowId('id'); // Establecer ID de fila
     }
 
@@ -33,7 +35,7 @@ class EmployeeDataTable extends DataTable
      */
     public function query(Employee $model): QueryBuilder
     {
-        return $model->newQuery()->orderBy('id', 'asc'); // Obtener empleados ordenados por ID
+        return $model->newQuery()->with('company'); // Obtener empleados ordenados por ID
     }
 
     /**
@@ -42,26 +44,15 @@ class EmployeeDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->columns([
-                Column::make('name') // Nombre del Empleado
-                      ->title('Nombre'),
-                Column::make('email') // Correo del Empleado
-                      ->title('Email'),
-                Column::make('department') // Departamento del Empleado
-                      ->title('Departamento'),
-                Column::make('created_at') // Fecha de Creación
-                      ->title('Creado'),
-                Column::computed('action') // Columna de acciones
-                      ->exportable(false)
-                      ->printable(false)
-                      ->width(60)
-                      ->addClass('text-center'),
-            ])
-            ->parameters([
-                'dom' => 'Bfrtip',
-                // Otras configuraciones si son necesarias...
-            ]);
-    }
+            ->parameters(["language" =>  ["url" =>"//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"]])
+            ->responsive()
+            ->setTableId('employees-table')
+            ->addTableClass('table-bordered w-100')
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->orderBy(1)
+            ->lengthChange();
+}
 
     /**
      * Get the dataTable columns definition.
@@ -69,23 +60,27 @@ class EmployeeDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('id') // ID del Empleado
-                  ->title('ID'),
-            Column::make('name') // Nombre del Empleado
-                  ->title('Nombre'),
-            Column::make('email') // Correo del Empleado
-                  ->title('Correo Electrónico'),
-            Column::make('position') // Puesto del Empleado
-                  ->title('Puesto'),
-            Column::make('department') // Departamento del Empleado
-                  ->title('Departamento'),
-            Column::make('created_at') // Fecha de Creación
-                  ->title('Fecha Creación'),
-            Column::computed('action') // Columna de acciones
-                  ->exportable(false)
-                  ->printable(false)
-                  ->width(60)
-                  ->addClass('text-center'),
+            Column::make('name') 
+                ->title('Nombre'),
+            Column::make('email') 
+                ->title('Correo Electrónico'),
+            Column::make('position') 
+                ->title('Puesto'),
+            Column::make('department') 
+                ->title('Departamento'),
+            Column::make('created_at')
+                ->title('Fecha Creación'),
+            Column::computed('company') 
+            ->title('Empresa')
+            ->exportable(false)  
+            ->printable(false)   
+            ->addClass('text-center'), 
+            Column::computed('action')
+                ->title('Acciones')
+                ->exportable(false)
+                ->printable(false)
+                ->width(60)
+                ->addClass('text-center'),
         ];
     }
 

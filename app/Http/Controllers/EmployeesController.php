@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\EmployeeDataTable;
+use App\Models\Company;
 use App\Models\Employee;
 use App\Models\Employees;
 use Barryvdh\DomPDF\PDF;
@@ -15,22 +16,17 @@ class EmployeesController extends Controller
     /**
      * Display a listing of the resource.
      */
-   public function index(EmployeeDataTable $dataTable, Request $request)
-{
-    // Si es una solicitud API, devolver JSON
-    if ($request->wantsJson()) {
-        return response()->json(Employee::all());
+    public function index(EmployeeDataTable $dataTable, Request $request)
+    {
+        return $dataTable->render('employees.index');
     }
-
-    // Si no es API, renderiza la vista con el DataTable
-    return $dataTable->render('employees.index');
-}
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
+
         return view('employees.create'); // Cambia a la vista correspondiente
     }
 
@@ -38,19 +34,22 @@ class EmployeesController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-{
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|string|email|max:255|unique:employees',
-        'position' => 'required|string|max:255',
-        'department' => 'required|string|max:255',
-        'status' => 'required|string|in:activo,inactivo', // Asegúrate de validar el status
-    ]);
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:employees,email',
+            'company_id' => 'required|exists:companies,id',
+            'status' => 'required|string',
+            'department' => 'nullable|string',
+            'user_id' => 'nullable|exists:users,id',
+            'position' => 'nullable|string'
+        ]);
 
-    Employee::create($request->all());
+        $employee = Employee::create($validated);
 
-    return redirect()->route('employees.index')->with('success', 'Empleado creado con éxito.');
-}
+        return response()->json($employee, 201);
+    }
+
 
 
     /**
@@ -70,13 +69,14 @@ class EmployeesController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit($id)
-    {
-        // Obtén el empleado por ID
-        $employee = Employee::findOrFail($id);
-
-        // Retorna la vista de edición con los datos del empleado
-        return view('employees.edit', ['employee' => $employee]);
+{
+    $employee = Employee::find($id);
+    if (!$employee) {
+        return response()->json(['error' => 'Empleado no encontrado'], 404);
     }
+    $companies = Company::all();
+    return response()->json(['employee' => $employee, 'companies' => $companies]);
+}
 
     /**
      * Update the specified resource in storage.
@@ -84,22 +84,19 @@ class EmployeesController extends Controller
     public function update(Request $request, $id)
     {
         // Validación de los datos
-        $request->validate([
-            'name' => 'required|max:100',
-            'email' => 'required|email|max:255|unique:employees,email,'.$id,
-            'position' => 'required|max:100',
-            'department' => 'required|max:100',
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'position' => 'required|string',
+            'department' => 'required|string',
+            'company_id' => 'required|exists:companies,id', // Validación de company_id
+            'status' => 'required|string',
+            'user_id' => 'nullable|integer',
         ]);
 
         // Encuentra el empleado por su ID
         $employee = Employee::findOrFail($id);
-
-        // Actualiza los campos del empleado con los datos del formulario
-        $employee->name = $request->name;
-        $employee->email = $request->email;
-        $employee->position = $request->position;
-        $employee->department = $request->department;
-        $employee->save();
+        $employee->update($validatedData);
 
         return response()->json(['message' => 'Empleado actualizado correctamente.']);
     }

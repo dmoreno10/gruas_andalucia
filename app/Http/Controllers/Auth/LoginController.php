@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\RoleRedirect;
 use App\Models\AccessLog; // Importa el modelo de AccessLog
 use Exception;
 use Illuminate\Http\Request;
@@ -19,7 +20,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/backend';
 
     /**
      * Create a new controller instance.
@@ -41,27 +42,10 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
-        try{
-        // Verificar si el usuario está autenticado correctamente
-        if ($user) {
-            // Log de acceso exitoso
-            AccessLog::create([
-                'user_id' => $user->id,  // Guarda el ID del usuario que se ha autenticado
-                'ip_address' => $request->ip(),
-                'user_agent' => $request->userAgent(),
-                'status' => 'success',  // Establecer el estado de éxito
-            ]);
-            $token = $user->createToken('practica')->plainTextToken; // Ejemplo de Laravel Sanctum
-
-        }
+        return app(RoleRedirect::class)->handle($request, function() {
+            // This function is not used in this context
+        });
     }
-        catch(Exception $e){
-            Log::error('Error registrando el acceso: ' . $e->getMessage());
-        }
-        // Redirigir al dashboard o la ruta correspondiente después del login
-        return redirect()->route('dashboard');  // O la ruta que desees redirigir
-    }
-
     /**
      * Handle the logout request.
      *

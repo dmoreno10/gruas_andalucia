@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('position'); // Añadido
             $table->string('department'); // Añadido
             $table->string('status'); // Añadido
-            $table->unsignedBigInteger('user_id')->nullable(); // Si deseas guardar el ID del usuario que crea el empleado
             $table->timestamps();
         });
     }

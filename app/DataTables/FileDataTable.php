@@ -28,7 +28,7 @@ class FileDataTable extends DataTable
 
         public function query(DocumentalGestion $model): QueryBuilder
         {
-            return $model->newQuery()->orderBy('id', 'asc');  // Cambia File por DocumentalGestion
+            return $model->newQuery()->orderBy('id', 'asc'); 
         }
 
         public function html(): HtmlBuilder

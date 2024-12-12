@@ -6,10 +6,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -37,6 +38,22 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
+    public function getRole()
+    {
+        return $this->getRoleNames()[0];
+    }
+
+    public function getRolelabel($role)
+    {
+        switch ($role) {
+            case 'admin':
+                return 'Administrador';
+            case 'client':
+                return 'Cliente';
+            default:
+                return 'Trabajador';
+        }
+    }
     protected function casts(): array
     {
         return [
@@ -46,6 +63,13 @@ class User extends Authenticatable
     }
     public function profileImage()
     {
-        return $this->belongsTo(File::class, 'profile_image_id'); // 'profile_image_id' es la clave foránea
+        return $this->belongsTo(File::class, 'profile_image_id'); 
     }
+    public function employee()
+    {
+        return $this->hasOne(Employee::class); 
+    }
+ 
+   
+
 }

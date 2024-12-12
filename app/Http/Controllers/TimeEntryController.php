@@ -37,14 +37,12 @@ class TimeEntryController extends Controller
             $user = Auth::user();
             $employee_id = 1;
 
-            Log::info('Información recibida del frontend:', $request->all());
             $start_time=Carbon::now();
             $timeEntry = TimeEntry::create([
                 'user_id' => $user->id,
                 'employee_id' => $employee_id,
                 'start_time' => $start_time,
             ]);
-            Log::info('Start-time al principio: '. $timeEntry->start_time);
 
             return response()->json(['message' => 'Jornada iniciada con éxito.', 'data' => $timeEntry], 201);
         }
@@ -60,7 +58,6 @@ class TimeEntryController extends Controller
             $user = Auth::user();
             $employee_id = 1; // Suponiendo que el ID del empleado es estático
 
-            Log::info('Información recibida del frontend para terminar jornada:', $request->all());
 
             // Buscar la entrada de tiempo activa para el usuario y empleado
             $timeEntry = TimeEntry::where('user_id', $user->id)

@@ -32,44 +32,34 @@ class ConfigurationDataTable extends DataTable
     public function query(Configuration $model): QueryBuilder
     {
         // Aquí puedes añadir filtros si es necesario
-        return $model->newQuery()->orderBy('id', 'asc');
+        return $model->newQuery();
     }
 
     /**
      * Optional method if you want to use the HTML builder.
      */
-    public function html(): HtmlBuilder
+    public function html()
     {
         return $this->builder()
-                    ->setTableId('configuration-table')
-                    ->columns($this->getColumns())
-                    ->minifiedAjax() // Asegúrate de que esta opción se ajuste a tus necesidades
-                    ->orderBy(1) // Ordenar por la primera columna
-                    ->selectStyleSingle()
-                    ->buttons([
-                        Button::make('excel'),
-                        Button::make('csv'),
-                        Button::make('pdf'),
-                        Button::make('print'),
-                        Button::make('reset'),
-                        Button::make('reload')
-                    ]);
-    }
-
+            ->parameters(["language" =>  ["url" =>"//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"]])
+            ->responsive()
+            ->setTableId('configuration-table')
+            ->addTableClass('table-bordered w-100')
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->orderBy(1)
+            ->lengthChange();
+}
     /**
      * Get the DataTable columns definition.
      */
     public function getColumns(): array
     {
         return [
-            Column::computed('action')
-                  ->exportable(false)
-                  ->printable(false)
-                  ->width(60)
-                  ->addClass('text-center'),
-            Column::make('id'),               // Asegúrate de que el campo `id` exista en tu tabla
-            Column::make('name'),             // Cambia esto a los nombres correctos de las columnas
-            Column::make('logo'),             // Cambia esto a los nombres correctos de las columnas
+            Column::computed('action')->exportable(false)->printable(false)->width(60)->addClass('text-center'),
+            Column::make('id'), 
+            Column::make('name'), 
+            Column::make('logo'),
             Column::make('created_at'),
             Column::make('updated_at'),
         ];

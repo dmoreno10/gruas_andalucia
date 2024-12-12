@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <h1 class="mb-4">Tasks</h1>
+    <h1 class="mb-4">{{ __('messages.tasks') }}</h1>
     <a href="{{ route('tasks.create') }}" class="btn btn-primary mb-3">Create New Task</a>
 
     @if (session('success'))
@@ -11,7 +11,7 @@
         </div>
     @endif
 
-    <div class="table-responsive">
+    <div class="col-12 table-responsive">
         {{ $dataTable->table(['class' => 'table table-striped table-bordered', 'id' => 'tasks-table']) }}
     </div>
 </div>

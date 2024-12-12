@@ -9,13 +9,16 @@
 
     <link
       rel="icon"
-      href="{{ Vite::asset('resources/dist/img/logic-sistemas.png') }}"
+      href="{{ Vite::asset('resources/dist/img/camion-grua.png') }}"
       type="image/x-icon"
     />
 
     <!-- Fonts and icons -->
     <!-- v--- Forma de poner un enlace  -->
-    <script src="{{ url('/dist/js/plugin\webfont\webfont.min.js') }}"></script>
+    <script src="{{ url('./dist/js/plugin\webfont\webfont.min.js') }}"></script>
+    <script href="{{ Vite::asset('./dist/css/fonts.min.css') }}"></script>
+
+
 
     @vite([
         'resources\js\fonts.js'

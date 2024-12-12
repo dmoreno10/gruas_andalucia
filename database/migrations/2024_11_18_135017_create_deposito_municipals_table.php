@@ -11,11 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('time_entries', function (Blueprint $table) {
+        Schema::create('municipal_deposit', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('employee_id')->constrained()->onDelete('cascade');
-            $table->timestamp('start_time');
-            $table->timestamp('end_time')->nullable();
+            $table->string('name');
+            $table->text('direction');
+            $table->string('town');
+            $table->integer('status');
+            $table->integer('phone');
+            $table->integer('mobile_phone');
             $table->timestamps();
         });
     }
@@ -25,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('time_entries');
+        Schema::dropIfExists('municipal-deposit');
     }
 };

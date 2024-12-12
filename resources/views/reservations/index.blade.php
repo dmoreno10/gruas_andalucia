@@ -19,7 +19,7 @@
                 </div>
 
                 <div class="card-body">
-                    <div class="table-responsive">
+                    <div class="col-12 table-responsive">
                         {{ $dataTable->table(['class' => 'table table-striped table-bordered', 'id' => 'reservations-table']) }}
                     </div>
                 </div>

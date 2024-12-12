@@ -49,44 +49,18 @@ class TasksDataTable extends DataTable
     /**
      * Optional method if you want to use the html builder.
      */
-    public function html(): HtmlBuilder
+    public function html()
     {
         return $this->builder()
-            ->columns([
-                Column::make('employee_id') // ID del Empleado
-                    ->title('Empleado')
-                    ->searchable(true),
-                Column::make('description') // Descripción de la tarea
-                    ->title('Descripción')
-                    ->searchable(true),
-                Column::make('points') // Puntos de la tarea
-                    ->title('Puntos')
-                    ->searchable(true),
-                Column::make('time_minutes') // Tiempo en minutos
-                    ->title('Tiempo (minutos)')
-                    ->searchable(true),
-                Column::computed('action') // Columna de acciones
-                    ->title('Acciones')
-                    ->exportable(false)
-                    ->printable(false)
-                    ->width(60)
-                    ->addClass('text-center'),
-            ])
-            ->parameters([
-                'language' => ['url' => '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'],
-                'dom' => 'Bfrtip', // Configuración para el DOM
-                'order' => [[1, 'asc']], // Ordenar por la primera columna
-                'select' => 'single', // Estilo de selección
-                'buttons' => [
-                    Button::make('excel'),
-                    Button::make('csv'),
-                    Button::make('pdf'),
-                    Button::make('print'),
-                    Button::make('reset'),
-                    Button::make('reload')
-                ]
-            ]);
-    }
+            ->parameters(["language" =>  ["url" =>"//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"]])
+            ->responsive()
+            ->setTableId('tasks-table')
+            ->addTableClass('table-bordered w-100')
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->orderBy(1)
+            ->lengthChange();
+}
 
 
     /**

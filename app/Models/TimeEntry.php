@@ -17,7 +17,7 @@ class TimeEntry extends Model
 
     protected $fillable = ['user_id','employee_id', 'start_time', 'ended_at','end_time'];
     protected $dates = ['start_time', 'end_time'];
-
+    public $timestamps = false;
 
     // Definir la relación con el empleado
     public function employee()

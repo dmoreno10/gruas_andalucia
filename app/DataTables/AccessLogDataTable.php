@@ -20,17 +20,19 @@ class AccessLogDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
+
             ->addColumn('user', function ($log) {
                 return $log->user ? $log->user->name : 'Invitado';
             })
-            ->editColumn('updated_at', function(AccessLog $model) {
+            ->editColumn('updated_at', function (AccessLog $model) {
                 return $model->created_at->format('d/m/Y H:i:s');
             })
-            ->editColumn('login_at', function(AccessLog $model) { // Formatear la fecha de login
-                return $model->login_at ? $model->login_at->format('d/m/Y H:i:s') : 'N/A'; // Formato y manejo de null
+            ->editColumn('login_at', function (AccessLog $model) {
+               
+                return $model->login_at ? $model->login_at->format('d/m/Y H:i:s') : 'N/A'; 
             })
             ->addColumn('status', function ($log) {
-                return ucfirst($log->status); // Capitalizar el estado de acceso
+                return ucfirst($log->status); 
             })
             ->setRowId('id');
     }
@@ -40,8 +42,8 @@ class AccessLogDataTable extends DataTable
      */
     public function query(AccessLog $model): QueryBuilder
     {
-        // Recuperamos los registros de acceso, con la relación con el usuario.
-        return $model->newQuery()->with('user')->orderBy('id', 'asc'); // Eager loading de la relación con el modelo User
+       
+        return $model->newQuery()->with('user'); 
     }
 
     /**
@@ -50,19 +52,21 @@ class AccessLogDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-                    ->setTableId('accesslog-table') // ID de la tabla
-                    ->columns($this->getColumns()) // Definimos las columnas
-                    ->minifiedAjax() // Carga los datos mediante AJAX
-                    ->orderBy(1) // Ordenamos por la primera columna (ID)
-                    ->selectStyleSingle()
-                    ->buttons([ // Botones de exportación
-                        Button::make('excel'),
-                        Button::make('csv'),
-                        Button::make('pdf'),
-                        Button::make('print'),
-                        Button::make('reset'),
-                        Button::make('reload')
-                    ]);
+            ->parameters(['language' => ['url' => '//cdn.datatables.net/plug-ins/2.1.8/i18n/es-ES.json']])
+            ->setTableId('accesslog-table') 
+            ->columns($this->getColumns()) 
+            ->minifiedAjax()
+            ->orderBy(1) 
+            ->selectStyleSingle()
+            ->buttons([
+                
+                Button::make('excel'),
+                Button::make('csv'),
+                Button::make('pdf'),
+                Button::make('print'),
+                Button::make('reset'),
+                Button::make('reload'),
+            ]);
     }
 
     /**
@@ -71,10 +75,10 @@ class AccessLogDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('id'), // ID del acceso
-            Column::make('user'), // Usuario asociado al acceso
-            Column::make('status')->title('Status'), // Estado de acceso
-            Column::make('updated_at')->title('Logeado en'), // Columna para la fecha de creación
+            Column::make('id'),
+            Column::make('user'), 
+            Column::make('status')->title('Status'), 
+            Column::make('updated_at')->title('Logeado en'), 
         ];
     }
 

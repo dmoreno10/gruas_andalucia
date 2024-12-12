@@ -19,12 +19,12 @@ class ReservationDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->addColumn('action', 'reservations.action') // Cambiar a la vista de acciones de reservas
+            ->addColumn('action', 'reservations.action') 
             ->editColumn('created_at', function(Reservation $model) {
-                return $model->created_at->format('d/m/Y H:i:s'); // Formato de la fecha
+                return $model->created_at->format('d/m/Y H:i:s'); 
             })
-            ->rawColumns(['action']) // Permitir HTML en la columna de acciones
-            ->setRowId('id'); // Establecer ID de fila
+            ->rawColumns(['action']) 
+            ->setRowId('id'); 
     }
 
     /**
@@ -32,7 +32,7 @@ class ReservationDataTable extends DataTable
      */
     public function query(Reservation $model): QueryBuilder
     {
-        return $model->newQuery()->orderBy('id', 'asc'); // Obtener reservas ordenadas por ID
+        return $model->newQuery()->orderBy('id', 'asc'); 
     }
 
     /**
@@ -42,15 +42,15 @@ class ReservationDataTable extends DataTable
     {
         return $this->builder()
             ->columns([
-                Column::make('client_name') // Nombre del Cliente
+                Column::make('client_name') 
                       ->title('Nombre del Cliente'),
-                Column::make('reservation_date') // Fecha de la Reserva
+                Column::make('reservation_date') 
                       ->title('Fecha de Reserva'),
-                Column::make('status') // Estado de la Reserva
+                Column::make('status') 
                       ->title('Estado'),
-                Column::make('created_at') // Fecha de Creación
+                Column::make('created_at')
                       ->title('Creado'),
-                Column::computed('action') // Columna de acciones
+                Column::computed('action')
                       ->exportable(false)
                       ->printable(false)
                       ->width(60)

@@ -22,10 +22,10 @@ class UsersDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->editColumn('created_at', function(User $model) {
+            ->editColumn('created_at', function (User $model) {
                 return $model->created_at->format('d/m/Y H:i:s');
             })
-            ->editColumn('updated_at', function(User $model) {
+            ->editColumn('updated_at', function (User $model) {
                 return $model->updated_at->format('d/m/Y H:i:s');
             })
             ->addColumn('action', 'users.action')
@@ -43,43 +43,29 @@ class UsersDataTable extends DataTable
     /**
      * Optional method if you want to use the html builder.
      */
-    public function html(): HtmlBuilder
+    public function html()
     {
         return $this->builder()
-                    ->parameters(['language' => ['url' => '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json']])
-                    ->setTableId('users-table')
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
-                    //->dom('Bfrtip')
-                    ->orderBy(1)
-                    ->selectStyleSingle()
-                    ->buttons([
-                        Button::make('excel'),
-                        Button::make('csv'),
-                        Button::make('pdf'),
-                        Button::make('print'),
-                        Button::make('reset'),
-                        Button::make('reload')
-                    ]);
+            ->parameters(['language' => ['url' => '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json']])
+            ->responsive()
+            ->setTableId('users-table')
+            ->addTableClass('table-bordered w-100')
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->orderBy(1)
+            ->lengthChange();
     }
-
     /**
      * Get the dataTable columns definition.
      */
     public function getColumns(): array
     {
         return [
-            Column::make('id'),
-            Column::make('name')->title('Nombre'),
-            Column::make('email')->title('Email'),
-            Column::make('created_at')->title('Fecha de creación'),
-            Column::make('updated_at')->title('Fecha de modificación'),
-            Column::computed('action')->title('Acciones')
-            ->exportable(false)
-            ->printable(false)
-            ->width(60)
-            ->addClass('text-center'),
-        ];
+        Column::make('name')->title('Nombre'),
+        Column::make('email')->title('Email'),
+        Column::make('created_at')->title('Fecha de creación'),
+        Column::make('updated_at')->title('Fecha de modificación'),
+        Column::computed('action')->title('Acciones')->exportable(false)->printable(false)->width(60)->addClass('text-center')];
     }
 
     /**

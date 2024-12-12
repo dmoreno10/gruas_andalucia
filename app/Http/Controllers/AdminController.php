@@ -17,28 +17,30 @@ class AdminController extends Controller
     {
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required|min:6'
+            'password' => 'required|min:6',
         ]);
-
 
         $credentials = $request->only('email', 'password');
 
-
         if (Auth::attempt($credentials)) {
+            $userrole = Auth::user()->getRole();
             AccessLog::create([
                 'user_id' => Auth::user()->id,
                 'ip_address' => request()->ip(),
                 'user_agent' => request()->userAgent(),
-                'status' => 'success',  // Establecer el estado de éxito
+                'status' => 'success', // Establecer el estado de éxito
             ]);
-
-            return redirect('/');
+            if ($userrole === 'admin') {
+                return redirect('/backend');
+            }else{
+                return redirect('/frontend');
+            }
         }
 
-
-        return back()->withErrors([
-            'email' => 'Las credenciales no coinciden con nuestros registros.',
-        ])->withInput($request->only('email'));
+        return back()
+            ->withErrors([
+                'email' => 'Las credenciales no coinciden con nuestros registros.',
+            ])
+            ->withInput($request->only('email'));
     }
-
 }
